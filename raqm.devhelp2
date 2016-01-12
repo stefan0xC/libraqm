@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
+<book xmlns="http://www.devhelp.net/book" title="Reference manual" link="index.html" author="" name="raqm" version="2" language="c">
+  <chapters>
+    <sub name="Raqm API" link="ch01.html">
+      <sub name="Raqm" link="raqm-Raqm.html"/>
+    </sub>
+    <sub name="Object Hierarchy" link="object-tree.html"/>
+    <sub name="API Index" link="api-index-full.html"/>
+    <sub name="Index of new symbols in 0.1.x" link="api-index-0-1.html"/>
+    <sub name="Index of deprecated API" link="deprecated-api-index.html"/>
+    <sub name="Annotation Glossary" link="annotation-glossary.html"/>
+  </chapters>
+  <functions>
+    <keyword type="function" name="raqm_create ()" link="raqm-Raqm.html#raqm-create" since="0.1"/>
+    <keyword type="function" name="raqm_reference ()" link="raqm-Raqm.html#raqm-reference" since="0.1"/>
+    <keyword type="function" name="raqm_destroy ()" link="raqm-Raqm.html#raqm-destroy" since="0.1"/>
+    <keyword type="function" name="raqm_set_text ()" link="raqm-Raqm.html#raqm-set-text" since="0.1"/>
+    <keyword type="function" name="raqm_set_par_direction ()" link="raqm-Raqm.html#raqm-set-par-direction" since="0.1"/>
+    <keyword type="function" name="raqm_set_freetype_face ()" link="raqm-Raqm.html#raqm-set-freetype-face" since="0.1"/>
+    <keyword type="function" name="raqm_add_font_feature ()" link="raqm-Raqm.html#raqm-add-font-feature" since="0.1"/>
+    <keyword type="function" name="raqm_layout ()" link="raqm-Raqm.html#raqm-layout" since="0.1"/>
+    <keyword type="function" name="raqm_get_glyphs ()" link="raqm-Raqm.html#raqm-get-glyphs" since="0.1"/>
+    <keyword type="typedef" name="raqm_t" link="raqm-Raqm.html#raqm-t" since="0.1"/>
+    <keyword type="enum" name="enum raqm_direction_t" link="raqm-Raqm.html#raqm-direction-t" since="0.1"/>
+    <keyword type="struct" name="raqm_glyph_t" link="raqm-Raqm.html#raqm-glyph-t"/>
+  </functions>
+</book>
