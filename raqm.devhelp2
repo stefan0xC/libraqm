@@ -16,6 +16,7 @@
     <keyword type="function" name="raqm_reference ()" link="raqm-Raqm.html#raqm-reference" since="0.1"/>
     <keyword type="function" name="raqm_destroy ()" link="raqm-Raqm.html#raqm-destroy" since="0.1"/>
     <keyword type="function" name="raqm_set_text ()" link="raqm-Raqm.html#raqm-set-text" since="0.1"/>
+    <keyword type="function" name="raqm_set_text_utf8 ()" link="raqm-Raqm.html#raqm-set-text-utf8" since="0.1"/>
     <keyword type="function" name="raqm_set_par_direction ()" link="raqm-Raqm.html#raqm-set-par-direction" since="0.1"/>
     <keyword type="function" name="raqm_set_freetype_face ()" link="raqm-Raqm.html#raqm-set-freetype-face" since="0.1"/>
     <keyword type="function" name="raqm_add_font_feature ()" link="raqm-Raqm.html#raqm-add-font-feature" since="0.1"/>
