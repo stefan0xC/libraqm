@@ -66,7 +66,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">void</span>
+<span class="returnvalue">bool</span>
 </td>
 <td class="function_name">
 <a class="link" href="raqm-Raqm.html#raqm-set-text" title="raqm_set_text ()">raqm_set_text</a> <span class="c_punctuation">()</span>
@@ -74,7 +74,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">void</span>
+<span class="returnvalue">bool</span>
 </td>
 <td class="function_name">
 <a class="link" href="raqm-Raqm.html#raqm-set-text-utf8" title="raqm_set_text_utf8 ()">raqm_set_text_utf8</a> <span class="c_punctuation">()</span>
@@ -82,7 +82,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">void</span>
+<span class="returnvalue">bool</span>
 </td>
 <td class="function_name">
 <a class="link" href="raqm-Raqm.html#raqm-set-par-direction" title="raqm_set_par_direction ()">raqm_set_par_direction</a> <span class="c_punctuation">()</span>
@@ -90,10 +90,18 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">void</span>
+<span class="returnvalue">bool</span>
 </td>
 <td class="function_name">
 <a class="link" href="raqm-Raqm.html#raqm-set-freetype-face" title="raqm_set_freetype_face ()">raqm_set_freetype_face</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">bool</span>
+</td>
+<td class="function_name">
+<a class="link" href="raqm-Raqm.html#raqm-set-freetype-face-range" title="raqm_set_freetype_face_range ()">raqm_set_freetype_face_range</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -179,7 +187,7 @@ face = … ;
 
 rq = raqm_create ();
 raqm_set_text (rq, text, len);
-raqm_set_freetype_face (rq, face, 0, len);
+raqm_set_freetype_face (rq, face);
 if (raqm_layout (rq))
 {
   glyphs = raqm_get_glyphs (rq, &amp;nglyphs);
@@ -266,7 +274,7 @@ See <code class="function">cairo_reference()</code>.</p>
 <hr>
 <div class="refsect2">
 <a name="raqm-set-text"></a><h3>raqm_set_text ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>
+<pre class="programlisting"><span class="returnvalue">bool</span>
 raqm_set_text (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
                <em class="parameter"><code>const <span class="type">uint32_t</span> *text</code></em>,
                <em class="parameter"><code><span class="type">size_t</span> len</code></em>);</pre>
@@ -304,12 +312,17 @@ separately can give improper output.</p>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.2.8.5.6"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
+<p></p>
+</div>
 <p class="since">Since 0.1</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="raqm-set-text-utf8"></a><h3>raqm_set_text_utf8 ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>
+<pre class="programlisting"><span class="returnvalue">bool</span>
 raqm_set_text_utf8 (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
                     <em class="parameter"><code>const <span class="type">char</span> *text</code></em>,
                     <em class="parameter"><code><span class="type">size_t</span> len</code></em>);</pre>
@@ -342,12 +355,17 @@ raqm_set_text_utf8 (<em class="parameter"><code><a class="link" href="raqm-Raqm.
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.2.8.6.6"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
+<p></p>
+</div>
 <p class="since">Since 0.1</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="raqm-set-par-direction"></a><h3>raqm_set_par_direction ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>
+<pre class="programlisting"><span class="returnvalue">bool</span>
 raqm_set_par_direction (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
                         <em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-direction-t" title="enum raqm_direction_t"><span class="type">raqm_direction_t</span></a> dir</code></em>);</pre>
 <p>Sets the paragraph direction, also known as block direction in CSS. For
@@ -389,24 +407,72 @@ text.</p>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.2.8.7.8"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
+<p></p>
+</div>
 <p class="since">Since 0.1</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="raqm-set-freetype-face"></a><h3>raqm_set_freetype_face ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>
+<pre class="programlisting"><span class="returnvalue">bool</span>
 raqm_set_freetype_face (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
-                        <em class="parameter"><code><span class="type">FT_Face</span> face</code></em>,
-                        <em class="parameter"><code><span class="type">size_t</span> start</code></em>,
-                        <em class="parameter"><code><span class="type">size_t</span> len</code></em>);</pre>
+                        <em class="parameter"><code><span class="type">FT_Face</span> face</code></em>);</pre>
+<p>Sets an <span class="type">FT_Face</span> to be used for all characters in <em class="parameter"><code>rq</code></em>
+.</p>
+<p>See also <a class="link" href="raqm-Raqm.html#raqm-set-freetype-face-range" title="raqm_set_freetype_face_range ()"><code class="function">raqm_set_freetype_face_range()</code></a>.</p>
+<div class="refsect3">
+<a name="id-1.2.2.8.8.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>rq</p></td>
+<td class="parameter_description"><p>a <a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>face</p></td>
+<td class="parameter_description"><p>an <span class="type">FT_Face</span>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.8.8.7"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
+<p></p>
+</div>
+<p class="since">Since 0.1</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="raqm-set-freetype-face-range"></a><h3>raqm_set_freetype_face_range ()</h3>
+<pre class="programlisting"><span class="returnvalue">bool</span>
+raqm_set_freetype_face_range (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
+                              <em class="parameter"><code><span class="type">FT_Face</span> face</code></em>,
+                              <em class="parameter"><code><span class="type">size_t</span> start</code></em>,
+                              <em class="parameter"><code><span class="type">size_t</span> len</code></em>);</pre>
 <p>Sets an <span class="type">FT_Face</span> to be used for <em class="parameter"><code>len</code></em>
 -number of characters staring at <em class="parameter"><code>start</code></em>
-.</p>
+.
+The <em class="parameter"><code>start</code></em>
+ and <em class="parameter"><code>len</code></em>
+ are UTF-32 character indices, regardless of the original
+text encoding.</p>
 <p>This method can be used repeatedly to set different faces for different
 parts of the text. It is the responsibility of the client to make sure that
 face ranges cover the whole text.</p>
+<p>See also <a class="link" href="raqm-Raqm.html#raqm-set-freetype-face" title="raqm_set_freetype_face ()"><code class="function">raqm_set_freetype_face()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.8.6"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.9.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -439,6 +505,11 @@ face ranges cover the whole text.</p>
 </tbody>
 </table></div>
 </div>
+<div class="refsect3">
+<a name="id-1.2.2.8.9.8"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
+<p></p>
+</div>
 <p class="since">Since 0.1</p>
 </div>
 <hr>
@@ -458,7 +529,7 @@ understood by <code class="function">hb_feature_from_string()</code>.</p>
 <p>This function can be called repeatedly, new features will be appended to the
 end of the features list and can potentially override previous features.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.9.7"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.10.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -486,7 +557,7 @@ end of the features list and can potentially override previous features.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.9.8"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.10.8"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if parsing <em class="parameter"><code>feature</code></em>
 succeeded, <code class="literal">false</code> otherwise.</p>
 <p></p>
@@ -504,7 +575,7 @@ Unicode Bidirectional Text algorithm will be applied to the text in <em class="p
 ,
 text shaping, and any other part of the layout process.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.10.5"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.11.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -519,7 +590,7 @@ text shaping, and any other part of the layout process.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.10.6"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.11.6"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if the layout process was successful, <code class="literal">false</code> otherwise.</p>
 <p></p>
 </div>
@@ -535,7 +606,7 @@ raqm_get_glyphs (<em class="parameter"><code><a class="link" href="raqm-Raqm.htm
 containing the glyph indices in the font, their positions and other possible
 information.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -557,8 +628,8 @@ information.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.11.6"></a><h4>Returns</h4>
-<p>An array of <a class="link" href="raqm-Raqm.html#raqm-glyph-t" title="raqm_glyph_t"><span class="type">raqm_glyph_t</span></a>. This is owned by <em class="parameter"><code>rq</code></em>
+<a name="id-1.2.2.8.12.6"></a><h4>Returns</h4>
+<p>An array of <a class="link" href="raqm-Raqm.html#raqm-glyph-t" title="raqm_glyph_t"><span class="type">raqm_glyph_t</span></a>, or <code class="literal">NULL</code> in case of error. This is owned by <em class="parameter"><code>rq</code></em>
 and must not be freed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
