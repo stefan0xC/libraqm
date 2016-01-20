@@ -19,7 +19,7 @@
     <keyword type="function" name="raqm_set_text_utf8 ()" link="raqm-Raqm.html#raqm-set-text-utf8" since="0.1"/>
     <keyword type="function" name="raqm_set_par_direction ()" link="raqm-Raqm.html#raqm-set-par-direction" since="0.1"/>
     <keyword type="function" name="raqm_set_freetype_face ()" link="raqm-Raqm.html#raqm-set-freetype-face" since="0.1"/>
-    <keyword type="function" name="raqm_set_freetype_face_range ()" link="raqm-Raqm.html#raqm-set-freetype-face-range" since="0.1"/>
+    <keyword type="function" name="raqm_set_freetype_face_range ()" link="raqm-Raqm.html#raqm-set-freetype-face-range" since="0.1" stability="Unstable"/>
     <keyword type="function" name="raqm_add_font_feature ()" link="raqm-Raqm.html#raqm-add-font-feature" since="0.1"/>
     <keyword type="function" name="raqm_layout ()" link="raqm-Raqm.html#raqm-layout" since="0.1"/>
     <keyword type="function" name="raqm_get_glyphs ()" link="raqm-Raqm.html#raqm-get-glyphs" since="0.1"/>
