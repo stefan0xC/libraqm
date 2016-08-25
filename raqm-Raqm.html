@@ -93,6 +93,14 @@
 <span class="returnvalue">bool</span>
 </td>
 <td class="function_name">
+<a class="link" href="raqm-Raqm.html#raqm-set-language" title="raqm_set_language ()">raqm_set_language</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">bool</span>
+</td>
+<td class="function_name">
 <a class="link" href="raqm-Raqm.html#raqm-set-freetype-face" title="raqm_set_freetype_face ()">raqm_set_freetype_face</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -126,6 +134,22 @@
 </td>
 <td class="function_name">
 <a class="link" href="raqm-Raqm.html#raqm-get-glyphs" title="raqm_get_glyphs ()">raqm_get_glyphs</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">bool</span>
+</td>
+<td class="function_name">
+<a class="link" href="raqm-Raqm.html#raqm-index-to-position" title="raqm_index_to_position ()">raqm_index_to_position</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">bool</span>
+</td>
+<td class="function_name">
+<a class="link" href="raqm-Raqm.html#raqm-position-to-index" title="raqm_position_to_index ()">raqm_position_to_index</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 </tbody>
@@ -173,26 +197,98 @@ input text, its properties, and the output of the layout process.</p>
 <p>To start, you create a <a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> object, add text and font(s) to it, run the
 layout process, and finally query about the output. For example:</p>
 <div class="informalexample"><pre class="programlisting">
-unit32_t     *text;
-size_t        len;
-FT_Face       face;
+#include "raqm.h"
 
-raqm_t       *rq;
-raqm_glyph_t *glyphs;
-size_t        nglyph;
-
-text = … ;
-len = … ;
-face = … ;
-
-rq = raqm_create ();
-raqm_set_text (rq, text, len);
-raqm_set_freetype_face (rq, face);
-if (raqm_layout (rq))
+int
+main (int argc, char *argv[])
 {
-  glyphs = raqm_get_glyphs (rq, &amp;nglyphs);
-  …
+    const char *fontfile;
+    const char *text;
+    const char *direction;
+    int i;
+    int ret = 1;
+
+    raqm_t *rq = NULL;
+    raqm_glyph_t *glyphs = NULL;
+    size_t count;
+    raqm_direction_t dir;
+
+    FT_Library ft_library = NULL;
+    FT_Face face = NULL;
+    FT_Error ft_error;
+
+
+    if (argc &lt; 4)
+    {
+        printf ("Usage:\n FONT_FILE TEXT DIRECTION\n");
+        return 1;
+    }
+
+    fontfile =  argv[1];
+    text = argv[2];
+    direction = argv[3];
+
+    ft_error = FT_Init_FreeType (&amp;ft_library);
+    if (ft_error)
+        goto final;
+    ft_error = FT_New_Face (ft_library, fontfile, 0, &amp;face);
+    if (ft_error)
+        goto final;
+    ft_error = FT_Set_Char_Size (face, face-&gt;units_per_EM, 0, 0, 0);
+    if (ft_error)
+        goto final;
+
+    dir = RAQM_DIRECTION_DEFAULT;
+    if (strcmp (direction, "-rtl") == 0)
+      dir = RAQM_DIRECTION_RTL;
+    else if (strcmp (direction, "-ltr") == 0)
+      dir = RAQM_DIRECTION_LTR;
+
+    rq = raqm_create ();
+    if (rq == NULL)
+        goto final;
+
+    if (!raqm_set_text_utf8 (rq, text, strlen (text)))
+        goto final;
+
+    if (!raqm_set_freetype_face (rq, face))
+        goto final;
+
+    if (!raqm_set_par_direction (rq, dir))
+        goto final;
+
+    if (!raqm_layout (rq))
+        goto final;
+
+    glyphs = raqm_get_glyphs (rq, &amp;count);
+    if (glyphs == NULL)
+        goto final;
+
+    for (i = 0; i &lt; count; i++)
+    {
+        printf ("%d %d %d %d %d %d\n",
+               glyphs[i].index,
+               glyphs[i].x_offset,
+               glyphs[i].y_offset,
+               glyphs[i].x_advance,
+               glyphs[i].y_advance,
+               glyphs[i].cluster);
+    }
+
+    ret = 0;
+
+final:
+    raqm_destroy (rq);
+    FT_Done_Face (face);
+    FT_Done_FreeType (ft_library);
+
+    return ret;
 }
+</pre></div>
+<p>
+To compile this example:</p>
+<div class="informalexample"><pre class="programlisting">
+cc -o test test.c `pkg-config --libs --cflags raqm`
 </pre></div>
 <p></p>
 </div>
@@ -416,6 +512,67 @@ text.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="raqm-set-language"></a><h3>raqm_set_language ()</h3>
+<pre class="programlisting"><span class="returnvalue">bool</span>
+raqm_set_language (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
+                   <em class="parameter"><code>const <span class="type">char</span> *lang</code></em>,
+                   <em class="parameter"><code><span class="type">size_t</span> start</code></em>,
+                   <em class="parameter"><code><span class="type">size_t</span> len</code></em>);</pre>
+<p>Sets a <a class="ulink" href="https://www.w3.org/International/articles/language-tags/" target="_top">BCP47 language
+code</a> to be used
+for <em class="parameter"><code>len</code></em>
+-number of characters staring at <em class="parameter"><code>start</code></em>
+.  The <em class="parameter"><code>start</code></em>
+ and <em class="parameter"><code>len</code></em>
+ are
+input string array indices (i.e. counting bytes in UTF-8 and scaler values
+in UTF-32).</p>
+<p>This method can be used repeatedly to set different languages for different
+parts of the text.</p>
+<div class="refsect3">
+<a name="id-1.2.2.8.8.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>rq</p></td>
+<td class="parameter_description"><p>a <a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>lang</p></td>
+<td class="parameter_description"><p>a BCP47 language code.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>start</p></td>
+<td class="parameter_description"><p>index of first character that should use <em class="parameter"><code>face</code></em>
+.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>len</p></td>
+<td class="parameter_description"><p>number of characters using <em class="parameter"><code>face</code></em>
+.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.8.8.7"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
+<p></p>
+</div>
+<p class="since">Since 0.2</p>
+<p class="stability">Stability Level: Unstable</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="raqm-set-freetype-face"></a><h3>raqm_set_freetype_face ()</h3>
 <pre class="programlisting"><span class="returnvalue">bool</span>
 raqm_set_freetype_face (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
@@ -424,7 +581,7 @@ raqm_set_freetype_face (<em class="parameter"><code><a class="link" href="raqm-R
 .</p>
 <p>See also <a class="link" href="raqm-Raqm.html#raqm-set-freetype-face-range" title="raqm_set_freetype_face_range ()"><code class="function">raqm_set_freetype_face_range()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.8.6"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.9.6"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -446,7 +603,7 @@ raqm_set_freetype_face (<em class="parameter"><code><a class="link" href="raqm-R
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.8.7"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.9.7"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
 <p></p>
 </div>
@@ -465,14 +622,14 @@ raqm_set_freetype_face_range (<em class="parameter"><code><a class="link" href="
 .
 The <em class="parameter"><code>start</code></em>
  and <em class="parameter"><code>len</code></em>
- are UTF-32 character indices, regardless of the original
-text encoding.</p>
+ are input string array indices (i.e. counting bytes in
+UTF-8 and scaler values in UTF-32).</p>
 <p>This method can be used repeatedly to set different faces for different
 parts of the text. It is the responsibility of the client to make sure that
 face ranges cover the whole text.</p>
 <p>See also <a class="link" href="raqm-Raqm.html#raqm-set-freetype-face" title="raqm_set_freetype_face ()"><code class="function">raqm_set_freetype_face()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.9.7"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.10.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -506,12 +663,11 @@ face ranges cover the whole text.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.9.8"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.10.8"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
 <p></p>
 </div>
 <p class="since">Since 0.1</p>
-<p class="stability">Stability Level: Unstable</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -530,7 +686,7 @@ understood by <code class="function">hb_feature_from_string()</code>.</p>
 <p>This function can be called repeatedly, new features will be appended to the
 end of the features list and can potentially override previous features.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.10.7"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.11.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -558,7 +714,7 @@ end of the features list and can potentially override previous features.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.10.8"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.11.8"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if parsing <em class="parameter"><code>feature</code></em>
 succeeded, <code class="literal">false</code> otherwise.</p>
 <p></p>
@@ -576,7 +732,7 @@ Unicode Bidirectional Text algorithm will be applied to the text in <em class="p
 ,
 text shaping, and any other part of the layout process.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.11.5"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.12.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -591,7 +747,7 @@ text shaping, and any other part of the layout process.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.11.6"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.12.6"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if the layout process was successful, <code class="literal">false</code> otherwise.</p>
 <p></p>
 </div>
@@ -607,7 +763,7 @@ raqm_get_glyphs (<em class="parameter"><code><a class="link" href="raqm-Raqm.htm
 containing the glyph indices in the font, their positions and other possible
 information.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -629,12 +785,117 @@ information.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.12.6"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.13.6"></a><h4>Returns</h4>
 <p>An array of <a class="link" href="raqm-Raqm.html#raqm-glyph-t" title="raqm_glyph_t"><span class="type">raqm_glyph_t</span></a>, or <code class="literal">NULL</code> in case of error. This is owned by <em class="parameter"><code>rq</code></em>
 and must not be freed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since 0.1</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="raqm-index-to-position"></a><h3>raqm_index_to_position ()</h3>
+<pre class="programlisting"><span class="returnvalue">bool</span>
+raqm_index_to_position (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
+                        <em class="parameter"><code><span class="type">size_t</span> *index</code></em>,
+                        <em class="parameter"><code><span class="type">int</span> *x</code></em>,
+                        <em class="parameter"><code><span class="type">int</span> *y</code></em>);</pre>
+<p>Calculates the cursor position after the character at <em class="parameter"><code>index</code></em>
+. If the character
+is right-to-left, then the cursor will be at the left of it, whereas if the
+character is left-to-right, then the cursor will be at the right of it.</p>
+<div class="refsect3">
+<a name="id-1.2.2.8.14.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>rq</p></td>
+<td class="parameter_description"><p>a <a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>index</p></td>
+<td class="parameter_description"><p> character index. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for input and for returning results. Default is transfer full."><span class="acronym">inout</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>x</p></td>
+<td class="parameter_description"><p> output x position. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>y</p></td>
+<td class="parameter_description"><p> output y position. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.8.14.6"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if the process was successful, <code class="literal">false</code> otherwise.</p>
+<p></p>
+</div>
+<p class="since">Since 0.2</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="raqm-position-to-index"></a><h3>raqm_position_to_index ()</h3>
+<pre class="programlisting"><span class="returnvalue">bool</span>
+raqm_position_to_index (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
+                        <em class="parameter"><code><span class="type">int</span> x</code></em>,
+                        <em class="parameter"><code><span class="type">int</span> y</code></em>,
+                        <em class="parameter"><code><span class="type">size_t</span> *index</code></em>);</pre>
+<p>Returns the <em class="parameter"><code>index</code></em>
+ of the character at <em class="parameter"><code>x</code></em>
+ and <em class="parameter"><code>y</code></em>
+ position within text.
+If the position is outside the text, the last character is chosen as
+<em class="parameter"><code>index</code></em>
+.</p>
+<div class="refsect3">
+<a name="id-1.2.2.8.15.5"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>rq</p></td>
+<td class="parameter_description"><p>a <a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>x</p></td>
+<td class="parameter_description"><p>x position.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>y</p></td>
+<td class="parameter_description"><p>y position.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>index</p></td>
+<td class="parameter_description"><p> output character index. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.8.15.6"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if the process was successful, <code class="literal">false</code> in case of error.</p>
+<p></p>
+</div>
+<p class="since">Since 0.2</p>
 </div>
 </div>
 <div class="refsect1">
@@ -703,6 +964,7 @@ well as its output.</p>
     int x_offset;
     int y_offset;
     uint32_t cluster;
+    FT_Face ftface;
 } raqm_glyph_t;
 </pre>
 <p>The structure that holds information about output glyphs, returned from
@@ -744,6 +1006,12 @@ well as its output.</p>
 <tr>
 <td class="struct_member_name"><p><span class="type">uint32_t</span> <em class="structfield"><code><a name="raqm-glyph-t.cluster"></a>cluster</code></em>;</p></td>
 <td class="struct_member_description"><p>the index of original character in input text.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><span class="type">FT_Face</span> <em class="structfield"><code><a name="raqm-glyph-t.ftface"></a>ftface</code></em>;</p></td>
+<td class="struct_member_description"><p>the <em class="parameter"><code>FT_Face</code></em>
+of the glyph.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 </tbody>

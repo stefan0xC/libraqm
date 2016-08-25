@@ -8,6 +8,7 @@
     <sub name="Object Hierarchy" link="object-tree.html"/>
     <sub name="API Index" link="api-index-full.html"/>
     <sub name="Index of new symbols in 0.1.x" link="api-index-0-1.html"/>
+    <sub name="Index of new symbols in 0.2.x" link="api-index-0-2.html"/>
     <sub name="Index of deprecated API" link="deprecated-api-index.html"/>
     <sub name="Annotation Glossary" link="annotation-glossary.html"/>
   </chapters>
@@ -18,11 +19,14 @@
     <keyword type="function" name="raqm_set_text ()" link="raqm-Raqm.html#raqm-set-text" since="0.1"/>
     <keyword type="function" name="raqm_set_text_utf8 ()" link="raqm-Raqm.html#raqm-set-text-utf8" since="0.1"/>
     <keyword type="function" name="raqm_set_par_direction ()" link="raqm-Raqm.html#raqm-set-par-direction" since="0.1"/>
+    <keyword type="function" name="raqm_set_language ()" link="raqm-Raqm.html#raqm-set-language" since="0.2" stability="Unstable"/>
     <keyword type="function" name="raqm_set_freetype_face ()" link="raqm-Raqm.html#raqm-set-freetype-face" since="0.1"/>
-    <keyword type="function" name="raqm_set_freetype_face_range ()" link="raqm-Raqm.html#raqm-set-freetype-face-range" since="0.1" stability="Unstable"/>
+    <keyword type="function" name="raqm_set_freetype_face_range ()" link="raqm-Raqm.html#raqm-set-freetype-face-range" since="0.1"/>
     <keyword type="function" name="raqm_add_font_feature ()" link="raqm-Raqm.html#raqm-add-font-feature" since="0.1"/>
     <keyword type="function" name="raqm_layout ()" link="raqm-Raqm.html#raqm-layout" since="0.1"/>
     <keyword type="function" name="raqm_get_glyphs ()" link="raqm-Raqm.html#raqm-get-glyphs" since="0.1"/>
+    <keyword type="function" name="raqm_index_to_position ()" link="raqm-Raqm.html#raqm-index-to-position" since="0.2"/>
+    <keyword type="function" name="raqm_position_to_index ()" link="raqm-Raqm.html#raqm-position-to-index" since="0.2"/>
     <keyword type="typedef" name="raqm_t" link="raqm-Raqm.html#raqm-t" since="0.1"/>
     <keyword type="enum" name="enum raqm_direction_t" link="raqm-Raqm.html#raqm-direction-t" since="0.1"/>
     <keyword type="struct" name="raqm_glyph_t" link="raqm-Raqm.html#raqm-glyph-t"/>
