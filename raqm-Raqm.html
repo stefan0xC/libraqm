@@ -117,6 +117,14 @@
 <span class="returnvalue">bool</span>
 </td>
 <td class="function_name">
+<a class="link" href="raqm-Raqm.html#raqm-set-freetype-load-flags" title="raqm_set_freetype_load_flags ()">raqm_set_freetype_load_flags</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">bool</span>
+</td>
+<td class="function_name">
 <a class="link" href="raqm-Raqm.html#raqm-add-font-feature" title="raqm_add_font_feature ()">raqm_add_font_feature</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
@@ -671,6 +679,45 @@ face ranges cover the whole text.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="raqm-set-freetype-load-flags"></a><h3>raqm_set_freetype_load_flags ()</h3>
+<pre class="programlisting"><span class="returnvalue">bool</span>
+raqm_set_freetype_load_flags (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
+                              <em class="parameter"><code><span class="type">int</span> flags</code></em>);</pre>
+<p>Sets the load flags passed to FreeType when loading glyphs, should be the
+same flags used by the client when rendering FreeType glyphs.</p>
+<p>This requires version of HarfBuzz that has <code class="function">hb_ft_font_set_load_flags()</code>, for
+older version the flags will be ignored.</p>
+<div class="refsect3">
+<a name="id-1.2.2.8.11.6"></a><h4>Parameters</h4>
+<div class="informaltable"><table width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>rq</p></td>
+<td class="parameter_description"><p>a <a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a>.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>flags</p></td>
+<td class="parameter_description"><p>FreeType load flags.</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="id-1.2.2.8.11.7"></a><h4>Returns</h4>
+<p><code class="literal">true</code> if no errors happened, <code class="literal">false</code> otherwise.</p>
+<p></p>
+</div>
+<p class="since">Since 0.3</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="raqm-add-font-feature"></a><h3>raqm_add_font_feature ()</h3>
 <pre class="programlisting"><span class="returnvalue">bool</span>
 raqm_add_font_feature (<em class="parameter"><code><a class="link" href="raqm-Raqm.html#raqm-t" title="raqm_t"><span class="type">raqm_t</span></a> *rq</code></em>,
@@ -686,7 +733,7 @@ understood by <code class="function">hb_feature_from_string()</code>.</p>
 <p>This function can be called repeatedly, new features will be appended to the
 end of the features list and can potentially override previous features.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.11.7"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.12.7"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -714,7 +761,7 @@ end of the features list and can potentially override previous features.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.11.8"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.12.8"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if parsing <em class="parameter"><code>feature</code></em>
 succeeded, <code class="literal">false</code> otherwise.</p>
 <p></p>
@@ -732,7 +779,7 @@ Unicode Bidirectional Text algorithm will be applied to the text in <em class="p
 ,
 text shaping, and any other part of the layout process.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.12.5"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.13.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -747,7 +794,7 @@ text shaping, and any other part of the layout process.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.12.6"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.13.6"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if the layout process was successful, <code class="literal">false</code> otherwise.</p>
 <p></p>
 </div>
@@ -763,7 +810,7 @@ raqm_get_glyphs (<em class="parameter"><code><a class="link" href="raqm-Raqm.htm
 containing the glyph indices in the font, their positions and other possible
 information.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.13.5"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.14.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -785,7 +832,7 @@ information.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.13.6"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.14.6"></a><h4>Returns</h4>
 <p>An array of <a class="link" href="raqm-Raqm.html#raqm-glyph-t" title="raqm_glyph_t"><span class="type">raqm_glyph_t</span></a>, or <code class="literal">NULL</code> in case of error. This is owned by <em class="parameter"><code>rq</code></em>
 and must not be freed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
@@ -805,7 +852,7 @@ raqm_index_to_position (<em class="parameter"><code><a class="link" href="raqm-R
 is right-to-left, then the cursor will be at the left of it, whereas if the
 character is left-to-right, then the cursor will be at the right of it.</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.14.5"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.15.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -837,7 +884,7 @@ character is left-to-right, then the cursor will be at the right of it.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.14.6"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.15.6"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if the process was successful, <code class="literal">false</code> otherwise.</p>
 <p></p>
 </div>
@@ -859,7 +906,7 @@ If the position is outside the text, the last character is chosen as
 <em class="parameter"><code>index</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.2.2.8.15.5"></a><h4>Parameters</h4>
+<a name="id-1.2.2.8.16.5"></a><h4>Parameters</h4>
 <div class="informaltable"><table width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
@@ -891,7 +938,7 @@ If the position is outside the text, the last character is chosen as
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.2.2.8.15.6"></a><h4>Returns</h4>
+<a name="id-1.2.2.8.16.6"></a><h4>Returns</h4>
 <p><code class="literal">true</code> if the process was successful, <code class="literal">false</code> in case of error.</p>
 <p></p>
 </div>
