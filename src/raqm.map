@@ -1,0 +1,6 @@
+{
+global:
+	raqm_*;
+local:
+	*;
+};
